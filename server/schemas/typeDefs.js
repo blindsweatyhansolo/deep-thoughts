@@ -32,11 +32,25 @@ const typeDefs = gql`
     username: String
   }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
+
   type Query {
+    me: User
     users: [User]
     user(username: String!): User
     thoughts(username: String): [Thought]
     thought(_id: ID!): Thought
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    addThought(thoughtText: String!): Thought
+    addReaction(thoughtId: ID!, reactionBody: String!): Thought
+    addFriend(friendId: ID!): User
   }
 `;
 
@@ -45,6 +59,9 @@ module.exports = typeDefs;
 
 // NOTES: //
 /**
+ * Query - equivalent to READ
+ * Mutation - equivalent to CREATE UPDATE DELETE 
+ * 
  * The use of ! after type definition in query means the data MUST exist before that
  * query can be carried out, otherwise an error is thrown and the query won't ever reach
  * the associated resolver function
