@@ -1,10 +1,10 @@
 import React from 'react';
+import ThoughtList from '../components/ThoughtList';
 // import useQuery hook to allow for requests to the GraphQL server connection from 
 // ApolloProvider in App.js
 import { useQuery } from '@apollo/client';
 // import query for all thoughts defined in utils/queries
 import { QUERY_THOUGHTS } from '../utils/queries';
-import ThoughtList from '../components/ThoughtList';
 
 const Home = () => {
   // use useQuery hook to make query request
@@ -16,7 +16,6 @@ const Home = () => {
   // properties; if data exists, store it in the thoughts constant, if data is undefined then
   // save an empty array to the thoughts component
   const thoughts = data?.thoughts || [];
-  // console.log(thoughts);
 
   return (
     <main>
@@ -25,7 +24,10 @@ const Home = () => {
           {loading ? (
             <div>Loading . . .</div>
           ) : (
-            <ThoughtList thoughts={thoughts} title="Some Feed for Thought(s). . ." />
+            <ThoughtList 
+              thoughts={thoughts} 
+              title="Some Feed for Thought(s). . ." 
+            />
           )}
         </div>
       </div>

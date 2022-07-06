@@ -1,5 +1,10 @@
 import React from 'react';
-import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { 
+  ApolloProvider, 
+  ApolloClient, 
+  InMemoryCache, 
+  createHttpLink 
+} from '@apollo/client';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,7 +13,7 @@ import Home from './pages/Home';
 
 // establish link to graphql server
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql'
+  uri: '/graphql'
 });
 
 // instantiate apollo client instance and create connection to the API endpoint

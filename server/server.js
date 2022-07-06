@@ -1,7 +1,7 @@
 const express = require('express');
-
 // import ApolloServer
 const { ApolloServer } = require('apollo-server-express');
+const path = require('path');
 
 // import typeof and resolvers
 const { typeDefs, resolvers } = require('./schemas');
@@ -22,6 +22,16 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// serve up static assets
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
+
+// WILDCARD route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 // create new instance of Apollo server with GraphQL schema
 const startApolloServer = async (typeDefs, resolvers) => {
