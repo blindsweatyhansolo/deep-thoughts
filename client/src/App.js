@@ -10,7 +10,9 @@ import {
   InMemoryCache, 
   createHttpLink 
 } from '@apollo/client';
-
+// setContext works like a middleware function to retrieve JWT and combine it with the
+// existing httpLink declaration
+import { setContext } from '@apollo/client/link/context';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -28,9 +30,24 @@ const httpLink = createHttpLink({
   uri: '/graphql',
 });
 
+// retrieves the token from localStorage and sets the HTTP request headers of every request
+// to include the returned token, whether it is needed or not
+// _ works as a placeholder for the first unused function parameter
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
 // instantiate apollo client instance and create connection to the API endpoint
 const client = new ApolloClient({
-  link: httpLink,
+  // combine authLink and httpLink so every request pre-retrieves the JWT and sets request headers
+  link: authLink.concat(httpLink),
   // instantiate new cache using InMemoryCache
   cache: new InMemoryCache(),
 });
@@ -47,10 +64,11 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/profile">
-                <Route path=":username" element={<Profile />} />
-                <Route path="" element={<Profile />} />
-              </Route>
+              <Route path="/profile" element={<Profile />} />
+              {/* <Route path="/profile"> */}
+                {/* <Route path=":username" element={<Profile />} /> */}
+                {/* <Route path="" element={<Profile />} /> */}
+              {/* </Route> */}
               <Route path="/thought/:id" element={<SingleThought />} />
               <Route path="*" element={<NoMatch />} />
             </Routes>
